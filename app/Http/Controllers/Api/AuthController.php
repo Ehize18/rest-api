@@ -19,8 +19,11 @@ class AuthController extends Controller
       //  ]);
 
         $validator = Validator::make($request->all(), [
-            'name'=>'required|min:2|max:100',
+            'first_name'=>'required|min:2|max:100',
+            'last_name'=>'required|min:2|max:100',
+            'middle_name'=>'min:2|max:100',
             'email'=>'required|email|unique:users',
+            'phone'=>'required|min:11|max:11',
             'password'=>'required|min:6|max:100',
             'confirm_password'=>'required|same:password'
         ]);
@@ -33,11 +36,14 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name'=>$request->name,
+            'first_name'=>$request->first_name,
+            'last_name'=>$request->last_name,
+            'middle_name'=>$request->middle_name,
             'email'=>$request->email,
+            'phone'=>$request->phone,
             'password'=>Hash::make($request->password)
         ]);
-
+        $user->save();
         return response()->json([
             'message'=>'Registration successfull',
             'data'=>$user
