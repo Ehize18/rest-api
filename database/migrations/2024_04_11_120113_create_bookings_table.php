@@ -17,8 +17,8 @@ return new class extends Migration
 
             $table->foreignId('listing_id')->constrained('listings');
             $table->foreignId('renter_id')->constrained('users');
-            $table->timestampTz('check_in');
-            $table->timestampTz('check_out');
+            $table->timestampTz('check_in')->nullable();
+            $table->timestampTz('check_out')->nullable();
             $table->integer('total_price');
             $table->string('status');
         });
