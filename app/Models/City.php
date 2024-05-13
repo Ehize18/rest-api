@@ -1,29 +1,52 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+namespace App\Models;
 
-return new class extends Migration
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class City extends Model
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('cities', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-
-            $table->string('name', 30)->unique();
-        });
-    }
+    use HasFactory;
 
     /**
-     * Reverse the migrations.
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
-    public function down(): void
+    protected $fillable = [
+        'name',
+        'country',
+        'population',
+        // Add more attributes as needed
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = true;
+
+    /**
+     * Get the listings for the city.
+     */
+    public function listings()
     {
-        Schema::dropIfExists('cities');
+        return $this->hasMany(Listing::class);
     }
-};
+}
