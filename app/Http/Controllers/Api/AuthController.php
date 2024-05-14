@@ -85,3 +85,68 @@ class AuthController extends Controller
 
     }
 }
+class CityController extends Controller
+{
+    // Создание города
+    public function createCity(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+        ]);
+
+        $city = City::create($data);
+
+        return response()->json($city, 201);
+    }
+
+    // Получение всех городов
+    public function getCities()
+    {
+        $cities = City::all();
+
+        return response()->json($cities);
+    }
+}
+
+class ListingController extends Controller
+{
+    // Создание объявления
+    public function createListing(Request $request)
+    {
+        $data = $request->validate([
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'city_id' => 'required|exists:cities,id',
+        ]);
+
+        $listing = Listing::create($data);
+
+        return response()->json($listing, 201);
+    }
+
+    // Получение всех объявлений с пагинацией
+    public function getListings()
+    {
+        $listings = Listing::paginate(10);
+
+        return response()->json($listings);
+    }
+
+    // Редактирование объявления
+    public function updateListing(Request $request, $id)
+    {
+        $listing = Listing::findOrFail($id);
+
+        $data = $request->validate([
+            'title' => 'string',
+            'description' => 'string',
+            'price' => 'numeric',
+            'city_id' => 'exists:cities,id',
+        ]);
+
+        $listing->update($data);
+
+        return response()->json($listing);
+    }
+}
