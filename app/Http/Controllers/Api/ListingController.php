@@ -33,7 +33,6 @@ class ListingController extends Controller
     {
         // Найти объявление по ID
         $listing = Listing::findOrFail($id);
-
         // Проверка авторства
         if ($listing->owner_id != Auth::id()) {
             return response()->json(['error' => 'You are not authorized to update this listing'], 403);
