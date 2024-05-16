@@ -19,7 +19,7 @@ class ListingController extends Controller
         ]);
 
         // Добавление ID автора
-        $data['author_id'] = Auth::id();
+        $data['owner_id'] = Auth::id();
 
         // Создание нового объявления
         $listing = Listing::create($data);
@@ -34,7 +34,7 @@ class ListingController extends Controller
         $listing = Listing::findOrFail($id);
 
         // Проверка авторства
-        if ($listing->author_id != Auth::id()) {
+        if ($listing->owner_id != Auth::id()) {
             return response()->json(['error' => 'You are not authorized to update this listing'], 403);
         }
 
@@ -51,3 +51,4 @@ class ListingController extends Controller
         return response()->json($listing);
     }
 }
+
