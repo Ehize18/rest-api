@@ -2,12 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ListingController;
-use App\Http\Controllers\CityController;
-use App\Http\Controllers\UserController;
-use App\Models\City;
-use App\Models\Listing;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ListingController;
+use App\Http\Controllers\Api\CityController;
+
 
 // Маршруты для аутентификации
 Route::post('/auth/register', [AuthController::class, 'register']);
