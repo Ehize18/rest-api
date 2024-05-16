@@ -8,53 +8,72 @@ use App\Http\Controllers\Controller;
 
 class CityController extends Controller
 {
-    // Создание нового города
-    public function createCity(Request $request)
+    public function index()
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $city = City::create($data);
-
-        return response()->json($city, 201);
-    }
-
-    // Получение всех городов
-    public function getCities()
-    {
+        // Получаем все города
         $cities = City::all();
 
+        // Возвращаем JSON с массивом городов
         return response()->json($cities);
     }
 
-    // Получение конкретного города по ID
-    public function getCity($id)
+    public function store(Request $request)
     {
-        $city = City::findOrFail($id);
+        // Создаем новый город на основе данных из запроса
+        $city = new City();
+        $city->name = $request->input('name');
+        $city->save();
 
+        // Возвращаем JSON с созданным городом
         return response()->json($city);
     }
 
-    // Обновление города
-    public function updateCity(Request $request, $id)
+    public function show($id)
     {
-        $data = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-        ]);
+        // Находим город по его ID
+        $city = City::find($id);
 
-        $city = City::findOrFail($id);
-        $city->update($data);
+        // Если город не найден, возвращаем ошибку 404
+        if (!$city) {
+            return response()->json(['error' => 'City not found'], 404);
+        }
 
+        // Возвращаем JSON с найденным городом
         return response()->json($city);
     }
 
-    // Удаление города
-    public function deleteCity($id)
+    public function update(Request $request, $id)
     {
-        $city = City::findOrFail($id);
+        // Находим город по его ID
+        $city = City::find($id);
+
+        // Если город не найден, возвращаем ошибку 404
+        if (!$city) {
+            return response()->json(['error' => 'City not found'], 404);
+        }
+
+        // Обновляем данные города на основе данных из запроса
+        $city->name = $request->input('name');
+        $city->save();
+
+        // Возвращаем JSON с обновленным городом
+        return response()->json($city);
+    }
+
+    public function destroy($id)
+    {
+        // Находим город по его ID
+        $city = City::find($id);
+
+        // Если город не найден, возвращаем ошибку 404
+        if (!$city) {
+            return response()->json(['error' => 'City not found'], 404);
+        }
+
+        // Удаляем найденный город
         $city->delete();
 
-        return response()->json(null, 204);
+        // Возвращаем сообщение об успешном удалении
+        return response()->json(['message' => 'City deleted']);
     }
 }

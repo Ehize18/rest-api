@@ -31,13 +31,15 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/user/messages/{id}', [MessagesController::class, 'update']);
     Route::delete('/user/messages/{receiver_id}', [MessagesController::class, 'destroy']);
 
+    Route::get('/listings', [ListingController::class, 'index']);
     Route::post('/listings', [ListingController::class, 'store']);
+    Route::get('/listings/{id}', [ListingController::class, 'show']);
     Route::put('/listings/{id}', [ListingController::class, 'update']);
     Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
 
-    Route::post('/cities', [CityController::class, 'createCity']);
-    Route::get('/cities', [CityController::class, 'getCities']);
-    Route::get('/cities/{id}', [CityController::class, 'getCity']);
-    Route::put('/cities/{id}', [CityController::class, 'updateCity']);
-    Route::delete('/cities/{id}', [CityController::class, 'deleteCity']);
+    Route::post('/cities', [CityController::class, 'store']);
+    Route::get('/cities', [CityController::class, 'index']);
+    Route::get('/cities/{id}', [CityController::class, 'show']);
+    Route::put('/cities/{id}', [CityController::class, 'update']);
+    Route::delete('/cities/{id}', [CityController::class, 'destroy']);
 });

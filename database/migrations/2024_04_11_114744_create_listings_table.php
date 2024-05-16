@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description');
             $table->foreignId('city_id')->constrained('cities');
             $table->string('address', 30);
-            $table->integer('price_per_day)');
+            $table->integer('price_per_day');
         });
     }
 
