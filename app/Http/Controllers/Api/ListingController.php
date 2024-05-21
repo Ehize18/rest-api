@@ -8,9 +8,14 @@ use App\Models\Listing;
 
 class ListingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $listings = Listing::all();
+        if ($request->has('paginate') && $request->input('paginate') === 'false') {
+            $listings = Listing::all();
+        } else {
+            $perPage = 10;
+            $listings = Listing::paginate($perPage);
+        }
 
         return response()->json($listings);
 
