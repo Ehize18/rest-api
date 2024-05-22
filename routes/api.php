@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\CityController;
+use App\Http\Controllers\Api\BookingsController;
 
 
 // Маршруты для аутентификации
@@ -42,4 +43,10 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/cities/{id}', [CityController::class, 'show']);
     Route::put('/cities/{id}', [CityController::class, 'update']);
     Route::delete('/cities/{id}', [CityController::class, 'destroy']);
+
+    Route::get('/bookings/{renter_id}', [BookingsController::class, 'index']);
+    Route::post('/bookings', [BookingsController::class, 'store']);
+    Route::put('/bookings/{id}', [BookingsController::class, 'update']);
+    Route::get('/bookings/{id}', [BookingsController::class, 'show']);
+    Route::delete('/bookings/{id}', [BookingsController::class, 'destroy']);
 });
