@@ -164,9 +164,9 @@ class BookingsController extends Controller
     if ($calculated_total_price != $request->total_price) {
         return response()->json(['error'=> 'total_price does not match the calculated rental price'],400);
     }
-        $booking->check_in = $request->input('check_in');
-        $booking->check_out = $request->input('check_out');
-        $booking->total_price = $request->input('total_price');
+        $booking->check_in = $request->check_in;
+        $booking->check_out = $request->check_out;
+        $booking->total_price = $request->total_price;
         $booking->save();
         return response()->json($booking);
     }
