@@ -44,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/cities/{id}', [CityController::class, 'update']);
     Route::delete('/cities/{id}', [CityController::class, 'destroy']);
 
-    Route::get('/bookings/{renter_id}', [BookingsController::class, 'index']);
+    Route::get('/bookings', [BookingsController::class, 'index']);
     Route::post('/bookings', [BookingsController::class, 'store']);
     Route::put('/bookings/{id}', [BookingsController::class, 'update']);
     //Route::get('/bookings/{id}', [BookingsController::class, 'show']);

@@ -17,19 +17,17 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      *
      *
-     * добавил в роутах в вывод всех бронирований параметром renter_id т.к.
-     * если все правильно понимаю, без id пользователя найти его
-     * бронирования нельзя, а реквеста нет -> вытащить по другому
-     * ид-шник юзера не получится
+     *
      */
-    public function index($renter_id)// вывод всех бронирований пользователя
+    public function index(Request $request)// вывод всех бронирований пользователя, пагинация если требуется
     {
-
+        $renter_id = $request->user()->id;
         $renter = User::find($renter_id);
         if(!$renter){
             return response()->json(["error"=>"renter not found"],404);
         }
-        $bookings = Booking::where('renter_id',$renter_id)->orderBy("created_at")->get();
+            $bookings = Booking::where('renter_id',$renter_id)->orderBy("created_at")->get();
+
         return response()->json($bookings);
     }
 
@@ -166,9 +164,9 @@ class BookingsController extends Controller
     if ($calculated_total_price != $request->total_price) {
         return response()->json(['error'=> 'total_price does not match the calculated rental price'],400);
     }
-        $booking->check_in = $request->check_in;
-        $booking->check_out = $request->check_out;
-        $booking->total_price = $request->total_price;
+        $booking->check_in = $request->input('check_in');
+        $booking->check_out = $request->input('check_out');
+        $booking->total_price = $request->input('total_price');
         $booking->save();
         return response()->json($booking);
     }
