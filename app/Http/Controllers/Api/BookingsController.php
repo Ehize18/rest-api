@@ -19,7 +19,7 @@ class BookingsController extends Controller
      *
      *
      */
-    public function index(Request $request)// вывод всех бронирований пользователя, пагинация если требуется
+    public function index(Request $request)// вывод всех бронирований пользователя
     {
         $renter_id = $request->user()->id;
         $renter = User::find($renter_id);
@@ -100,14 +100,15 @@ class BookingsController extends Controller
      */
 
 
-
-    // public function show($id){
-    // $booking = Booking::find($id);
-    // if(!$booking){
-    //         return response()->json(['error' => 'Booking not found'],404);
-    //     }
-    //     return response()->json($booking);
-    // }
+    //вывод информации о конкретном бронировании пользователя
+    public function show(Request $request, $id)
+    {
+    $booking = Booking::find($id);
+    if(!$booking){
+            return response()->json(['error' => 'Booking not found'],404);
+        }
+        return response()->json($booking);
+    }
 
 
 
@@ -118,7 +119,7 @@ class BookingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)//обновление бронирования
+    public function update(Request $request)//обновление бронирования
     {
         $request->validate([
             'listing_id'=>'required|numeric',
@@ -128,7 +129,7 @@ class BookingsController extends Controller
             'total_price'=>'required|numeric',
             'status'=>'required|string'
         ]);
-        $booking = Booking::find($id);
+        $booking = Booking::find($request->id);
         if(!$booking){
             return response()->json(['error' => 'Booking to update not found'],404);
         }
@@ -144,7 +145,7 @@ class BookingsController extends Controller
                 'error'=>'Incorrect listing of the booking'
             ], 400);
         }
-        $other_bookings = Booking::where('listing_id', $booking->listing_id)->where('id', '!=', $id)->get();
+        $other_bookings = Booking::where('listing_id', $booking->listing_id)->where('id', '!=', $request->id)->get();
         $outt = Carbon::parse($request->check_out);
         $inn = Carbon::parse($request->check_in);
         foreach ($other_bookings as $other_booking) {
@@ -178,12 +179,17 @@ class BookingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)//удаление бронирования
+    public function destroy(Request $request)//удаление бронирования
     {
-        $booking = Booking::find($id);
+        $booking = Booking::find($request->id);
+        $user_id = $request->user()->id;
+        if($user_id!== $booking->renter_id){
+            return response()->json(['error'=> 'Only creator of the booking can delete it'],400);
+        }
         if(!$booking){
             return response()->json(['error'=> 'Booking not found'],404);
         }
+
         $booking->delete();
         return response()->json(['message' => 'Booking deleted']);
     }
