@@ -22,18 +22,16 @@ class Review extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
-    /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [];
+    protected $casts = [
+        'booking_id' => 'integer',
+        'author_id' => 'integer',
+        'rate' => 'integer',
+        'text' => 'string',
+    ];
 
     /**
      * Indicates if the model should be timestamped.
@@ -44,6 +42,8 @@ class Review extends Model
 
     /**
      * Get the booking that owns the review.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function booking()
     {
@@ -52,6 +52,8 @@ class Review extends Model
 
     /**
      * Get the author of the review.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function author()
     {
