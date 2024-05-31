@@ -35,7 +35,11 @@ class Listing extends Model
      *
      * @var array
      */
-    protected $casts = [];
+    protected $casts = [
+        'price_per_day' => 'float',
+        'owner_id' => 'integer',
+        'city_id' => 'integer',
+    ];
 
     /**
      * Indicates if the model should be timestamped.
@@ -46,6 +50,8 @@ class Listing extends Model
 
     /**
      * Get the user that owns the listing.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function owner()
     {
@@ -54,9 +60,21 @@ class Listing extends Model
 
     /**
      * Get the city of the listing.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function city()
     {
         return $this->belongsTo(City::class);
+    }
+
+    /**
+     * Get the reviews for the listing.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }
