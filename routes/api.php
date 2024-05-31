@@ -7,7 +7,11 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\BookingsController;
+use App\Http\Controllers\ReviewController;
 
+// Маршруты для отзывов
+Route::post('/listings/{listing}/reviews', [ReviewController::class, 'store']);
+Route::get('/listings/{listing}/reviews', [ReviewController::class, 'index']);
 
 // Маршруты для аутентификации
 Route::post('/auth/register', [AuthController::class, 'register']);
