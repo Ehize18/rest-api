@@ -9,9 +9,8 @@ use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\BookingsController;
 use App\Http\Controllers\ReviewController;
 
-// Маршруты для отзывов
-Route::post('/listings/{listing}/reviews', [ReviewController::class, 'store']);
-Route::get('/listings/{listing}/reviews', [ReviewController::class, 'index']);
+
+
 
 // Маршруты для аутентификации
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -53,4 +52,8 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/bookings/{id}', [BookingsController::class, 'update']);
     Route::get('/bookings/{id}', [BookingsController::class, 'show']);
     Route::delete('/bookings/{id}', [BookingsController::class, 'destroy']);
+
+    // Маршруты для отзывов
+    Route::post('/{listing_id}/reviews', [ReviewController::class, 'store']);
+    Route::get('/{listing_id}/reviews', [ReviewController::class, 'index']);
 });
