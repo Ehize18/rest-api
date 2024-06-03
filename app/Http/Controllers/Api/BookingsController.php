@@ -41,11 +41,8 @@ class BookingsController extends Controller
     {
         $request->validate([
             'listing_id'=>'required|numeric',
-            'renter_id'=>'required|numeric',
             'check_in'=>'required|date_format:Y-m-d H:i:s',
             'check_out'=>'required|date_format:Y-m-d H:i:s',
-            'total_price'=>'required|numeric',
-            'status'=>'required|string'
         ]);
         $listing = Listing::find($request->listing_id);
         if(!$listing){
@@ -55,9 +52,7 @@ class BookingsController extends Controller
         if(!User::find($renter)){
             return response()->json(['error' => 'renter not found'],404);
         }
-        if(!($renter==$request->renter_id)){
-            return response()->json(['error' => 'Only current user can do the booking for himself'],400);
-        }
+
         $bookings = Booking::where('listing_id', $request->listing_id)->get();
         $outt = Carbon::parse($request->check_out);
         $inn = Carbon::parse($request->check_in);
@@ -77,17 +72,13 @@ class BookingsController extends Controller
     $days_diff = Carbon::parse($request->check_out)->diffInDays(Carbon::parse($request->check_in));
     $calculated_total_price = $price_per_day * (1+$days_diff);
 
-    // Проверка соответствия цены аренды и total_price
-    if ($calculated_total_price != $request->total_price) {
-        return response()->json(['error'=> 'total_price does not match the calculated rental price'],400);
-    }
         $booking = Booking::create([
             'listing_id'=>$request->listing_id,
-            'renter_id'=>$request->renter_id,
+            'renter_id'=>$renter,
             'check_in'=>$request->check_in,
             'check_out'=>$request->check_out,
-            'total_price'=>$request->total_price,
-            'status'=>$request->status
+            'total_price'=>$calculated_total_price,
+            'status'=>'Создано'
         ]);
         return response()->json($booking);
     }
@@ -119,55 +110,48 @@ class BookingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)//обновление бронирования
+    public function update(Request $request, int $id)//обновление бронирования
     {
         $request->validate([
-            'listing_id'=>'required|numeric',
-            'renter_id'=>'required|numeric',
-            'check_in'=>'required|date_format:Y-m-d H:i:s',
-            'check_out'=>'required|date_format:Y-m-d H:i:s',
-            'total_price'=>'required|numeric',
-            'status'=>'required|string'
+            'check_in'=>'sometimes|required|date_format:Y-m-d H:i:s',
+            'check_out'=>'sometimes|required|date_format:Y-m-d H:i:s',
+            'status'=>'sometimes|required|string'
         ]);
-        $booking = Booking::find($request->id);
+        $booking = Booking::find($id);
         if(!$booking){
             return response()->json(['error' => 'Booking to update not found'],404);
         }
         $user_id = $request->user()->id;
-        if ($user_id !== $request->renter_id){
-            return response()->json([
-                'error'=>'You are not the creator of the booking'
-            ], 400);
-        }
-        $l_id = $request->listing_id;
-        if ($l_id !== $booking->listing_id){
-            return response()->json([
-                'error'=>'Incorrect listing of the booking'
-            ], 400);
-        }
-        $other_bookings = Booking::where('listing_id', $booking->listing_id)->where('id', '!=', $request->id)->get();
-        $outt = Carbon::parse($request->check_out);
-        $inn = Carbon::parse($request->check_in);
-        foreach ($other_bookings as $other_booking) {
-            $other_check_in = Carbon::parse($other_booking->check_in);
-            $other_check_out = Carbon::parse($other_booking->check_out);
-            if ($inn->between($other_check_in, $other_check_out) ||
-            $outt->between($other_check_in, $other_check_out) ||
-                ($inn->lte($other_check_in) && $outt->gte($other_check_out))) {
-                return response()->json(['error' => 'The new dates conflict with an existing bookings.'], 400);
-            }
-        }
-        $price_per_day = Listing::find($request->listing_id)->price_per_day;
-        $days_diff = Carbon::parse($request->check_out)->diffInDays(Carbon::parse($request->check_in));
-    $calculated_total_price = $price_per_day * (1+$days_diff);
 
-    // Проверка соответствия цены аренды и total_price
-    if ($calculated_total_price != $request->total_price) {
-        return response()->json(['error'=> 'total_price does not match the calculated rental price'],400);
-    }
-        $booking->check_in = $request->check_in;
-        $booking->check_out = $request->check_out;
-        $booking->total_price = $request->total_price;
+        if ($user_id !== $booking->renter_id){
+            return response()->json(['error' => 'Only booking creator can change it'], 403);
+        }
+        
+        if ($request->has('check_in') and $request->has('check_out')){
+            $other_bookings = Booking::where('listing_id', $booking->listing_id)->where('id', '!=', $request->id)->get();
+            $outt = Carbon::parse($request->check_out);
+            $inn = Carbon::parse($request->check_in);
+            foreach ($other_bookings as $other_booking) {
+                $other_check_in = Carbon::parse($other_booking->check_in);
+                $other_check_out = Carbon::parse($other_booking->check_out);
+                if ($inn->between($other_check_in, $other_check_out) ||
+                $outt->between($other_check_in, $other_check_out) ||
+                    ($inn->lte($other_check_in) && $outt->gte($other_check_out))) {
+                    return response()->json(['error' => 'The new dates conflict with an existing bookings.'], 400);
+                }
+            }
+            $price_per_day = Listing::find($booking->listing_id)->price_per_day;
+            $days_diff = Carbon::parse($request->check_out)->diffInDays(Carbon::parse($request->check_in));
+            $calculated_total_price = $price_per_day * (1+$days_diff);
+
+            $booking->check_in = $request->check_in;
+            $booking->check_out = $request->check_out;
+            $booking->total_price = $calculated_total_price;
+        }
+
+        if ($request->has('status')){
+            $booking->status = $request->status;
+        }
         $booking->save();
         return response()->json($booking);
     }

@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ListingController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\BookingsController;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Api\ReviewController;
 
 
 
