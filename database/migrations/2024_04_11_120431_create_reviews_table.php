@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('booking_id')->constrained('bookings');
-            $table->foreignId('author_id')->constrained('users');
-            $table->tinyInteger('rate');
+            $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
+            $table->foreignId('author_id')->constrained('users')->onDelete('cascade');
+            $table->tinyInteger('rate')->unsigned()->check(function ($column) {
+                $column->between(1, 5);
+            });
             $table->text('text');
         });
     }
@@ -27,6 +29,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('reviews', function (Blueprint $table) {
+            $table->dropForeign(['booking_id']);
+            $table->dropForeign(['author_id']);
+        });
+        
         Schema::dropIfExists('reviews');
     }
 };

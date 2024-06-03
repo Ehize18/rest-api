@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/listings', [ListingController::class, 'index']);
 Route::get('/listings/{id}', [ListingController::class, 'show']);
 
+Route::get('/listings/{id}/reviews', [ReviewController::class, 'index']);
 
 //Здесь все пути, доступные ТОЛЬКО после аутентификации
 Route::middleware('auth:sanctum')->group(function(){
@@ -53,7 +54,5 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::get('/bookings/{id}', [BookingsController::class, 'show']);
     Route::delete('/bookings/{id}', [BookingsController::class, 'destroy']);
 
-    // Маршруты для отзывов
-    Route::post('/{listing_id}/reviews', [ReviewController::class, 'store']);
-    Route::get('/{listing_id}/reviews', [ReviewController::class, 'index']);
+    Route::post('/listings/{id}/reviews', [ReviewController::class, 'store']);
 });
