@@ -9,6 +9,14 @@ use Illuminate\Http\Request;
 
 class MessagesController extends Controller
 {
+/**
+* @OA\Get(
+     *     path="/api/user/messages",
+     *     tags={"Messages"},
+     *     summary="Получение id пользователей, с которыми у вас есть переписка",
+     *     @OA\Response(response="200", description="Список id пользователей"),
+     * )
+     */
     public function getConversationsID(Request $request)
     {
         $user_id=request()->user()->id;
@@ -24,6 +32,29 @@ class MessagesController extends Controller
         return response()->json(array_unique($answer));
     }
 
+/**
+* @OA\Post(
+     *     path="/api/user/messages/{id}",
+     *     tags={"Messages"},
+     *     summary="Создание сообщения пользователю с данным id",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id получателя",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="text",
+     *         in="query",
+     *         description="Текст сообщения",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Сообщение создано"),
+     *     @OA\Response(response="404", description="Получатель не найден"),
+     * )
+     */
     public function store(Request $request, $receiver_id)
     {
         $request->validate([
@@ -44,6 +75,21 @@ class MessagesController extends Controller
         return response()->json($message);
     }
 
+/**
+* @OA\Get(
+     *     path="/api/user/messages/{id}",
+     *     tags={"Messages"},
+     *     summary="Получение переписки с пользователем",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id получателя",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Все сообщения с сортировкой по времени"),
+     * )
+     */
     public function getConversation(Request $request, $id)
     {
         $user_id = $request->user()->id;
@@ -53,6 +99,30 @@ class MessagesController extends Controller
         return response()->json($messages);
     }
 
+/**
+* @OA\Put(
+     *     path="/api/user/messages",
+     *     tags={"Messages"},
+     *     summary="Изменение сообщения",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id сообщения",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="text",
+     *         in="query",
+     *         description="Новый текст сообщения",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Сообщение изменено"),
+     *     @OA\Response(response="404", description="Сообщение не найдено"),
+     *     @OA\Response(response="403", description="Вы не создатель сообщения")
+     * )
+     */
     public function update(Request $request)
     {
         $request->validate([
@@ -69,7 +139,7 @@ class MessagesController extends Controller
         if ($user_id !== $message->sender_id){
             return response()->json([
                 'text'=>'Вы не создатель сообщения'
-            ], 400);
+            ], 403);
         }
 
         $message->text = $request->text;
@@ -78,6 +148,24 @@ class MessagesController extends Controller
             'text'=>'Сообщение изменено'
         ]);
     }
+
+/**
+* @OA\Delete(
+     *     path="/api/user/messages",
+     *     tags={"Messages"},
+     *     summary="Удаление сообщения",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id сообщения",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Сообщение удалено"),
+     *     @OA\Response(response="404", description="Сообщение не найдено"),
+     *     @OA\Response(response="403", description="Вы не создатель сообщения")
+     * )
+     */
     public function destroy(Request $request)
     {
         $request->validate([
@@ -93,7 +181,7 @@ class MessagesController extends Controller
         if ($user_id !== $message->sender_id){
             return response()->json([
                 'text'=>'Вы не создатель сообщения'
-            ], 400);
+            ], 403);
         }
         $message->delete();
         return response()->json([

@@ -36,9 +36,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::put('/user/messages/{id}', [MessagesController::class, 'update']);
     Route::delete('/user/messages/{receiver_id}', [MessagesController::class, 'destroy']);
 
-    Route::get('/listings', [ListingController::class, 'index']);
     Route::post('/listings', [ListingController::class, 'store']);
-    Route::get('/listings/{id}', [ListingController::class, 'show']);
     Route::put('/listings/{id}', [ListingController::class, 'update']);
     Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
 

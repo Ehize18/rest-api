@@ -8,6 +8,21 @@ use App\Models\Listing;
 
 class ListingController extends Controller
 {
+/**
+* @OA\Get(
+     *     path="/api/listings",
+     *     tags={"Listings"},
+     *     summary="Получение всех объявлений",
+     *     @OA\Parameter(
+     *         name="paginate",
+     *         in="query",
+     *         description="Включить пагинацию",
+     *         required=false,
+     *         @OA\Schema(type="bool")
+     *     ),
+     *     @OA\Response(response="200", description="Список объявлений"),
+     * )
+     */
     public function index(Request $request)
     {
         if ($request->has('paginate') && $request->input('paginate') === 'false') {
@@ -21,6 +36,50 @@ class ListingController extends Controller
 
     }
 
+/**
+* @OA\Post(
+     *     path="/api/listings",
+     *     tags={"Listings"},
+     *     summary="Добавление объявления",
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Название объявления",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         description="Описание объявления",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="city_id",
+     *         in="query",
+     *         description="Id города",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="address",
+     *         in="query",
+     *         description="Адрес недвижимости",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="price_per_day",
+     *         in="query",
+     *         description="Цена за день аренды",
+     *         required=true,
+     *         @OA\Schema(type="numeric")
+     *     ),
+     *     @OA\Response(response="200", description="Объявление создано"),
+     *     @OA\Response(response="422", description="Ощибка валидации")
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -45,6 +104,21 @@ class ListingController extends Controller
         return response()->json($listing);
     }
 
+/**
+* @OA\Get(
+     *     path="/api/listings/{id}",
+     *     tags={"Listings"},
+     *     summary="Получение объявления по id",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Объявление")
+     * )
+     */
     public function show($id)
     {
         $listing = Listing::find($id);
@@ -54,6 +128,37 @@ class ListingController extends Controller
         return response()->json($listing);
     }
 
+/**
+* @OA\Put(
+     *     path="/api/listings/{id}",
+     *     tags={"Listings"},
+     *     summary="Изменение названия и описания объявления",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="title",
+     *         in="query",
+     *         description="Новое название",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="description",
+     *         in="query",
+     *         description="Новое описание",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Объявление изменено"),
+     *     @OA\Response(response="404", description="Объявление не найдено"),
+     *     @OA\Response(response="403", description="Вы не владелец объявления")
+     * )
+     */
     public function update(Request $request, $id)
     {
         $listing = Listing::find($id);
@@ -72,6 +177,22 @@ class ListingController extends Controller
         return response()->json($listing);
     }
 
+/**
+* @OA\Delete(
+     *     path="/api/listings/{id}",
+     *     tags={"Listings"},
+     *     summary="Изменение названия и описания объявления",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Объявление изменено"),
+     *     @OA\Response(response="404", description="Объявление не найдено"),
+     * )
+     */
     public function destroy($id)
     {
         $listing = Listing::find($id);

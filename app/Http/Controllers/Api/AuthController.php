@@ -10,6 +10,64 @@ use Hash;
 
 class AuthController extends Controller
 {
+/**
+* @OA\Post(
+     *     path="/api/auth/register",
+     *     tags={"Auth"},
+     *     summary="Регистрация пользователя",
+     *     @OA\Parameter(
+     *         name="first_name",
+     *         in="query",
+     *         description="Имя пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="last_name",
+     *         in="query",
+     *         description="Фамилия пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="middle_name",
+     *         in="query",
+     *         description="Отчество пользователя",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="Email пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="phone",
+     *         in="query",
+     *         description="Номер телефона пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="Пароль пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="confirm_password",
+     *         in="query",
+     *         description="Повтор пароля пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Регистрация успешна"),
+     *     @OA\Response(response="422", description="Ошибка валидации данных")
+     * )
+     */
     public function register(Request $request){
        // $request->validate([
       //      'name'=>'required|min:2|max:100',
@@ -50,6 +108,29 @@ class AuthController extends Controller
         ],200);
     }
 
+/**
+* @OA\Post(
+     *     path="/api/auth/login",
+     *     tags={"Auth"},
+     *     summary="Аутентификация пользователя",
+     *     @OA\Parameter(
+     *         name="email",
+     *         in="query",
+     *         description="Email пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="password",
+     *         in="query",
+     *         description="Пароль пользователя",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Аутентификация успешна"),
+     *     @OA\Response(response="422", description="Ошибка валидации данных")
+     * )
+     */
     public function login(Request $request){
         $validator = Validator::make($request->all(), [
             'email'=>'required|email',

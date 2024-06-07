@@ -19,6 +19,16 @@ class BookingsController extends Controller
      *
      *
      */
+
+/**
+* @OA\Get(
+     *     path="/api/bookings",
+     *     tags={"Bookings"},
+     *     summary="Вывод всех бронирований пользователя",
+     *     @OA\Response(response="200", description="Список бронирований"),
+     *     @OA\Response(response="404", description="Пользователь не найден"),
+     * )
+     */
     public function index(Request $request)// вывод всех бронирований пользователя
     {
         $renter_id = $request->user()->id;
@@ -36,6 +46,38 @@ class BookingsController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     */
+
+/**
+* @OA\Post(
+     *     path="/api/bookings",
+     *     tags={"Bookings"},
+     *     summary="Создание бронирования",
+     *     @OA\Parameter(
+     *         name="listing_id",
+     *         in="query",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="check_in",
+     *         in="query",
+     *         description="Дата въезда",
+     *         required=true,
+     *         @OA\Schema(type="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="check_out",
+     *         in="query",
+     *         description="Дата выезда",
+     *         required=true,
+     *         @OA\Schema(type="date")
+     *     ),
+     *     @OA\Response(response="200", description="Бронирование создано"),
+     *     @OA\Response(response="404", description="Пользователь или объявление не найдены"),
+     *     @OA\Response(response="400", description="Даты недоступны для бронирования"),
+     * )
      */
     public function store(Request $request)//создание бронирования
     {
@@ -90,7 +132,22 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
+/**
+* @OA\Get(
+     *     path="/api/bookings/{id}",
+     *     tags={"Bookings"},
+     *     summary="Вывод информации о бронировании",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Бронирование"),
+     *     @OA\Response(response="404", description="Бронирование не найдено"),
+     * )
+     */
     //вывод информации о конкретном бронировании пользователя
     public function show(Request $request, $id)
     {
@@ -109,6 +166,45 @@ class BookingsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+/**
+* @OA\Put(
+     *     path="/api/bookings/{id}",
+     *     tags={"Bookings"},
+     *     summary="Изменение бронирования",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="check_in",
+     *         in="query",
+     *         description="Новая дата въезда",
+     *         required=false,
+     *         @OA\Schema(type="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="check_out",
+     *         in="query",
+     *         description="Новая дата выезда",
+     *         required=false,
+     *         @OA\Schema(type="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Новый статус бронирования",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(response="200", description="Бронирование изменено"),
+     *     @OA\Response(response="404", description="Бронирование не найдено"),
+     *     @OA\Response(response="403", description="Вы не владелец бронирования"),
+     *     @OA\Response(response="400", description="Даты недоступны для бронирования"),
+     * )
      */
     public function update(Request $request, int $id)//обновление бронирования
     {
@@ -162,6 +258,23 @@ class BookingsController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+/**
+* @OA\Delete(
+     *     path="/api/bookings/{id}",
+     *     tags={"Bookings"},
+     *     summary="Удаление бронирования",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Id объявления",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(response="200", description="Бронирование удалено"),
+     *     @OA\Response(response="404", description="Бронирование не найдено"),
+     *     @OA\Response(response="403", description="Вы не владелец бронирования"),
+     * )
      */
     public function destroy(Request $request)//удаление бронирования
     {

@@ -1,0 +1,714 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Listings Api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Регистрация пользователя",
+                "operationId": "c7bb21a0d87049e161b8e4c9b0d909f2",
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "Имя пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "Фамилия пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "middle_name",
+                        "in": "query",
+                        "description": "Отчество пользователя",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "query",
+                        "description": "Номер телефона пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Пароль пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "confirm_password",
+                        "in": "query",
+                        "description": "Повтор пароля пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Регистрация успешна"
+                    },
+                    "422": {
+                        "description": "Ошибка валидации данных"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Аутентификация пользователя",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "Email пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "Пароль пользователя",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Аутентификация успешна"
+                    },
+                    "422": {
+                        "description": "Ошибка валидации данных"
+                    }
+                }
+            }
+        },
+        "/api/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Вывод всех бронирований пользователя",
+                "operationId": "39cda3cc485672c7b4532fac2e444926",
+                "responses": {
+                    "200": {
+                        "description": "Список бронирований"
+                    },
+                    "404": {
+                        "description": "Пользователь не найден"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Создание бронирования",
+                "operationId": "76856b1825fd8f8255a04a1619d6495e",
+                "parameters": [
+                    {
+                        "name": "listing_id",
+                        "in": "query",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "check_in",
+                        "in": "query",
+                        "description": "Дата въезда",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "check_out",
+                        "in": "query",
+                        "description": "Дата выезда",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Бронирование создано"
+                    },
+                    "404": {
+                        "description": "Пользователь или объявление не найдены"
+                    },
+                    "400": {
+                        "description": "Даты недоступны для бронирования"
+                    }
+                }
+            }
+        },
+        "/api/bookings/{id}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Вывод информации о бронировании",
+                "operationId": "fe233850da5548f6e72cf5e709e2e28f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Бронирование"
+                    },
+                    "404": {
+                        "description": "Бронирование не найдено"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Изменение бронирования",
+                "operationId": "7d83fb8e0b692333f812e27411aa3f1b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "check_in",
+                        "in": "query",
+                        "description": "Новая дата въезда",
+                        "required": false,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "check_out",
+                        "in": "query",
+                        "description": "Новая дата выезда",
+                        "required": false,
+                        "schema": {
+                            "type": "date"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Новый статус бронирования",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Бронирование изменено"
+                    },
+                    "404": {
+                        "description": "Бронирование не найдено"
+                    },
+                    "403": {
+                        "description": "Вы не владелец бронирования"
+                    },
+                    "400": {
+                        "description": "Даты недоступны для бронирования"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Удаление бронирования",
+                "operationId": "37664c0aa2659691af768e7b7c8b6402",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Бронирование удалено"
+                    },
+                    "404": {
+                        "description": "Бронирование не найдено"
+                    },
+                    "403": {
+                        "description": "Вы не владелец бронирования"
+                    }
+                }
+            }
+        },
+        "/api/listings": {
+            "get": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Получение всех объявлений",
+                "operationId": "626511cff52fa1165beca4b7480a66c8",
+                "parameters": [
+                    {
+                        "name": "paginate",
+                        "in": "query",
+                        "description": "Включить пагинацию",
+                        "required": false,
+                        "schema": {
+                            "type": "bool"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список объявлений"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Добавление объявления",
+                "operationId": "f232854be0ba1c4e83eeda78909de489",
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Название объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Описание объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "city_id",
+                        "in": "query",
+                        "description": "Id города",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "description": "Адрес недвижимости",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price_per_day",
+                        "in": "query",
+                        "description": "Цена за день аренды",
+                        "required": true,
+                        "schema": {
+                            "type": "numeric"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Объявление создано"
+                    },
+                    "422": {
+                        "description": "Ощибка валидации"
+                    }
+                }
+            }
+        },
+        "/api/listings/{id}": {
+            "get": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Получение объявления по id",
+                "operationId": "3d6056b16aecf7f8e24443d7e69f9e1e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Объявление"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Изменение названия и описания объявления",
+                "operationId": "f0c3d97b00edab2226ce3a2e80b3c060",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "description": "Новое название",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "description": "Новое описание",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Объявление изменено"
+                    },
+                    "404": {
+                        "description": "Объявление не найдено"
+                    },
+                    "403": {
+                        "description": "Вы не владелец объявления"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Изменение названия и описания объявления",
+                "operationId": "9f2ef5353184b7ca889c8e4d150cc093",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Объявление изменено"
+                    },
+                    "404": {
+                        "description": "Объявление не найдено"
+                    }
+                }
+            }
+        },
+        "/api/user/messages": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Получение id пользователей, с которыми у вас есть переписка",
+                "operationId": "ef914a0d0e80004d2a61bb6e5346b39d",
+                "responses": {
+                    "200": {
+                        "description": "Список id пользователей"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Изменение сообщения",
+                "operationId": "509dac8f5c36cf23999cecb6c26d0b65",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id сообщения",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "in": "query",
+                        "description": "Новый текст сообщения",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение изменено"
+                    },
+                    "404": {
+                        "description": "Сообщение не найдено"
+                    },
+                    "403": {
+                        "description": "Вы не создатель сообщения"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Удаление сообщения",
+                "operationId": "b19161afa771d3337b26ac613f11eeeb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id сообщения",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение удалено"
+                    },
+                    "404": {
+                        "description": "Сообщение не найдено"
+                    },
+                    "403": {
+                        "description": "Вы не создатель сообщения"
+                    }
+                }
+            }
+        },
+        "/api/user/messages/{id}": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Получение переписки с пользователем",
+                "operationId": "79b6efe1755ea718ded68cbc35355e24",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id получателя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Все сообщения с сортировкой по времени"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Создание сообщения пользователю с данным id",
+                "operationId": "d54d6a23d19c8788988fe4dde6104079",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id получателя",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "in": "query",
+                        "description": "Текст сообщения",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение создано"
+                    },
+                    "404": {
+                        "description": "Получатель не найден"
+                    }
+                }
+            }
+        },
+        "/api/listings/{id}/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Получение отзывов на объявлении",
+                "operationId": "35af10c7e2b7c9119470a7b8bb96daf5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Отзывы создан"
+                    },
+                    "404": {
+                        "description": "Объявление не найдено"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Создание отзыва",
+                "operationId": "2558421061d384fc4d264bcf784f2cb3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id объявления",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "rate",
+                        "in": "query",
+                        "description": "Рейтинг от 1 до 5",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "in": "query",
+                        "description": "Текст отзыва",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Отзыв создан"
+                    },
+                    "404": {
+                        "description": "Объявление не найдено"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    }
+}
